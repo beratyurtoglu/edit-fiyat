@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Fiyat Hesabı</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --line:#262b35; --text:#e9ecf1; --muted:#8b93a3;
+    --accent:#4da3ff; --accent2:#7cf0c0; --chip:#1f2430;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:520px;margin:0 auto;padding:20px 16px 48px}
+  h1{font-size:20px;margin:4px 0 18px;letter-spacing:.2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+  label.t{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.6px}
+  input[type=number],select{width:100%;background:#0f1218;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:17px;appearance:none}
+  select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 12px) 52%;background-size:6px 6px;background-repeat:no-repeat;padding-right:34px}
+  input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .hint{font-size:13px;color:var(--muted);margin-top:6px}
+  .lvl{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .lvl button{background:var(--chip);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 0;font-size:18px;font-weight:700;cursor:pointer}
+  .lvl button.on{background:var(--accent);border-color:var(--accent);color:#06121f}
+  details.dd{border:1px solid var(--line);border-radius:10px;background:#0f1218}
+  details.dd summary{list-style:none;cursor:pointer;padding:12px;font-size:17px;display:flex;justify-content:space-between;align-items:center}
+  details.dd summary::-webkit-details-marker{display:none}
+  details.dd summary::after{content:"▾";color:var(--muted)}
+  details.dd[open] summary::after{content:"▴"}
+  .opts{padding:4px 12px 12px;border-top:1px solid var(--line)}
+  .opt{display:flex;align-items:center;gap:10px;padding:9px 0;font-size:15px}
+  .opt input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent)}
+  .opt .r{margin-left:auto;color:var(--muted);font-size:13px}
+  .opt input.n{width:70px;padding:6px 8px;font-size:15px}
+  .result{background:linear-gradient(160deg,#16243a,#171a21 60%);border-color:#24406a;text-align:center;padding:22px 16px}
+  .price{font-size:46px;font-weight:800;letter-spacing:-1px;margin:4px 0}
+  .raw{color:var(--muted);font-size:14px}
+  .bd{margin-top:14px;text-align:left;font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+  .bd div{display:flex;justify-content:space-between;padding:3px 0}
+  .bd b{color:var(--text);font-weight:600}
+  .btn{margin-top:14px;width:100%;background:var(--accent2);color:#05140e;border:0;border-radius:10px;padding:12px;font-size:16px;font-weight:700;cursor:pointer}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid2 label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+  .settings summary{cursor:pointer;color:var(--muted);font-size:14px;font-weight:600}
+  .settings .grid2{margin-top:12px}
+  .rate{margin-top:10px;font-size:14px;color:var(--muted)}
+  .rate b{color:var(--accent2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎬 Edit Fiyat Hesabı</h1>
+
+  <div class="card">
+    <label class="t" for="hours">Kaç saatimi alır?</label>
+    <input id="hours" type="number" min="0.5" step="0.5" value="6" inputmode="decimal">
+    <div class="hint" id="hoursHint"></div>
+  </div>
+
+  <div class="card">
+    <label class="t">Zorluk</label>
+    <div class="lvl" id="lvl"></div>
+    <div class="hint" id="lvlHint"></div>
+  </div>
+
+  <div class="card">
+    <label class="t" for="usage">Kullanım</label>
+    <select id="usage">
+      <option value="1.0">Kişisel / düğün / anı videosu</option>
+      <option value="1.2">Markanın organik sosyal medya içeriği</option>
+      <option value="1.5" selected>Ücretli reklam / satış videosu</option>
+      <option value="1.8">Kurumsal tanıtım / TV / büyük kampanya</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <label class="t">Ekstralar</label>
+    <details class="dd" id="extras">
+      <summary><span id="exSum">Seçilmedi</span></summary>
+      <div class="opts">
+        <label class="opt"><input type="checkbox" data-pct="40" data-name="Acil teslim (24 saat)">Acil teslim (24 saat)<span class="r">+%40</span></label>
+        <label class="opt"><input type="checkbox" data-pct="20" data-name="Hızlı teslim (48 saat)">Hızlı teslim (48 saat)<span class="r">+%20</span></label>
+        <label class="opt"><input type="checkbox" data-pct="25" data-name="Ek format (9:16 + 16:9)">Ek format (9:16 + 16:9)<span class="r">+%25</span></label>
+        <label class="opt"><input type="checkbox" data-pct="30" data-name="Proje dosyası teslimi">Proje dosyası teslimi<span class="r">+%30</span></label>
+        <label class="opt"><input type="checkbox" data-pct="15" data-name="Müzik / ses tasarımı">Müzik / ses tasarımı<span class="r">+%15</span></label>
+        <label class="opt"><input type="checkbox" id="revOn" data-name="Ek revizyon">Ek revizyon
+          <input class="n" id="revCount" type="number" min="1" value="1" inputmode="numeric"><span class="r" id="revR"></span></label>
+      </div>
+    </details>
+  </div>
+
+  <div class="card result">
+    <div class="raw">Teklif</div>
+    <div class="price" id="price">–</div>
+    <div class="raw" id="rawLine"></div>
+    <div class="bd" id="bd"></div>
+    <button class="btn" id="copy">Fiyatı kopyala</button>
+  </div>
+
+  <div class="card">
+    <details class="settings">
+      <summary>⚙️ Ayarlar</summary>
+      <div class="grid2">
+        <div><label for="goal">Aylık hedef gelir (TL)</label><input id="goal" type="number" min="0" step="1000"></div>
+        <div><label for="mh">Ayda iş saati</label><input id="mh" type="number" min="1" step="5"></div>
+        <div><label for="buf">Süre payı (×)</label><input id="buf" type="number" min="1" step="0.05"></div>
+        <div><label for="floor">Taban fiyat (TL)</label><input id="floor" type="number" min="0" step="100"></div>
+        <div><label for="revFee">Ek revizyon (TL/adet)</label><input id="revFee" type="number" min="0" step="100"></div>
+        <div><label for="step">Yuvarlama adımı</label>
+          <select id="step"><option value="100">100</option><option value="250">250</option><option value="500">500</option><option value="1000">1000</option></select></div>
+        <div style="grid-column:1/-1"><label for="mode">Yuvarlama yönü</label>
+          <select id="mode"><option value="down">Aşağı (5450 → 5000)</option><option value="near">En yakın (5450 → 5500)</option><option value="up">Yukarı (5450 → 5500)</option></select></div>
+      </div>
+      <div class="rate">Saatlik ücretin: <b id="rate">–</b></div>
+    </details>
+  </div>
+</div>
+
+<script>
+const LEVELS=[
+  {m:1.0, t:"Basit kesim, müzik"},
+  {m:1.1, t:"Kesim + düz altyazı, renk"},
+  {m:1.2, t:"Animasyonlu altyazı, efektler"},
+  {m:1.3, t:"Motion grafik, mockup, animasyon"},
+  {m:1.5, t:"Ağır motion / VFX / 3D"}
+];
+const DEF={goal:28000,mh:80,buf:1.3,floor:1500,revFee:500,step:500,mode:"down",lvl:4};
+const $=id=>document.getElementById(id);
+let S={...DEF};
+try{const s=JSON.parse(localStorage.getItem("editFiyat")||"{}");S={...DEF,...s}}catch(e){}
+function save(){try{localStorage.setItem("editFiyat",JSON.stringify(S))}catch(e){}}
+const tl=n=>Math.round(n).toLocaleString("tr-TR")+" TL";
+
+["goal","mh","buf","floor","revFee","step","mode"].forEach(k=>{
+  const el=$(k); el.value=S[k];
+  el.addEventListener("input",()=>{S[k]=el.tagName==="SELECT"&&k==="mode"?el.value:parseFloat(el.value)||0;save();calc()});
+});
+
+const lvl=$("lvl");
+LEVELS.forEach((L,i)=>{const b=document.createElement("button");b.type="button";b.textContent=i+1;
+  b.onclick=()=>{S.lvl=i+1;save();calc()};lvl.appendChild(b)});
+
+document.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",calc));
+document.querySelectorAll("#extras input[type=checkbox]").forEach(el=>el.addEventListener("change",calc));
+$("revCount").addEventListener("focus",()=>{$("revOn").checked=true;calc()});
+
+function roundTo(v,step,mode){
+  if(mode==="up")return Math.ceil(v/step)*step;
+  if(mode==="near")return Math.round(v/step)*step;
+  return Math.floor(v/step)*step;
+}
+
+function calc(){
+  const rate=S.mh>0?S.goal/S.mh:0;
+  $("rate").textContent=tl(rate)+" / saat";
+  const h=Math.max(0,parseFloat($("hours").value)||0);
+  const hb=h*S.buf;
+  $("hoursHint").textContent=`Payla birlikte ${hb.toLocaleString("tr-TR",{maximumFractionDigits:1})} saat hesaplanıyor (×${S.buf})`;
+  [...lvl.children].forEach((b,i)=>b.classList.toggle("on",i+1===S.lvl));
+  const L=LEVELS[S.lvl-1];
+  $("lvlHint").textContent=`${S.lvl}: ${L.t} (×${L.m})`;
+  const usage=parseFloat($("usage").value);
+
+  const base=hb*rate;
+  const sub=base*L.m*usage;
+  let pct=0, fixed=0, names=[];
+  document.querySelectorAll("#extras input[type=checkbox]").forEach(c=>{
+    if(!c.checked)return;
+    if(c.id==="revOn"){const n=Math.max(1,parseInt($("revCount").value)||1);fixed+=n*S.revFee;names.push(`${n} ek revizyon`)}
+    else{pct+=parseFloat(c.dataset.pct);names.push(c.dataset.name)}
+  });
+  $("revR").textContent="+"+tl(S.revFee)+"/adet";
+  $("exSum").textContent=names.length?names.join(", "):"Seçilmedi";
+  const raw=sub*(1+pct/100)+fixed;
+  const floored=Math.max(raw,S.floor);
+  const step=S.step||500;
+  let fin=roundTo(floored,step,S.mode);
+  if(fin<S.floor)fin=Math.ceil(S.floor/step)*step;
+
+  $("price").textContent=h>0?tl(fin):"–";
+  $("rawLine").textContent=h>0?`Ham hesap: ${tl(raw)}${raw<S.floor?" · taban uygulandı":""}`:"";
+  $("bd").innerHTML=h>0?`
+    <div><span>${hb.toLocaleString("tr-TR",{maximumFractionDigits:1})} saat × ${tl(rate)}</span><b>${tl(base)}</b></div>
+    <div><span>Zorluk ×${L.m}</span><b>${tl(base*L.m)}</b></div>
+    <div><span>Kullanım ×${usage}</span><b>${tl(sub)}</b></div>
+    ${pct?`<div><span>Ekstralar +%${pct}</span><b>${tl(sub*(1+pct/100))}</b></div>`:""}
+    ${fixed?`<div><span>Ek revizyon</span><b>+${tl(fixed)}</b></div>`:""}`:"";
+}
+
+$("copy").onclick=()=>{
+  const t=$("price").textContent;
+  try{navigator.clipboard.writeText(t);$("copy").textContent="Kopyalandı ✓";setTimeout(()=>$("copy").textContent="Fiyatı kopyala",1200)}catch(e){}
+};
+calc();
+</script>
+</body>
+</html>
